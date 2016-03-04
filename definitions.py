@@ -52,9 +52,98 @@ class BinBuilder():
     def __init__(self):
 
     def buildBins(self, wheel):
-        # only straight bets so far
+        straightBet(wheel)
+        streetBet(wheel)
+        lineBet(wheel)
+        dozenBet(wheel)
+
+    def straightBet(self, wheel):
         for n in range(38):
-            wheel.addOutcome(n, Outcome("straight bet", n))
+            wheel.addOutcome(n, Outcome("straight bet", 35))
+    
+    def horizontalSplitBet(self, wheel):
+        for r in range(11):
+            n = 3 * r + 1
+            o = Outcome("split bet", 17)
+            wheel.addOutcome(n, o)
+            wheel.addOutcome(n + 1, o)
+            n = 3 * r + 2
+            wheel.addOutcome(n, o)
+            wheel.addOutcome(n + 1, o)
+
+    def verticalSplitBet(self, wheel):
+        for n in range(1,34):
+            o = Outcome("split bet", 17)
+            wheel.addOutcome(n, o)
+            wheel.addOutcome(n + 3, o)
+
+    def streetBet(self, wheel):
+        for r in range(11):
+            n = 3 * r + 1
+            o = Outcome("street bet", 11)
+            wheel.addOutcome(n, o)
+            wheel.addOutcome(n + 1, o)
+            wheel.addOutcome(n + 2, o)
+
+    def cornerBet(self, wheel):
+        for r in range(10):
+            n = 3 * r + 1
+            o = Outcome("corner bet", 8)
+            wheel.addOutcome(n, o)
+            wheel.addOutcome(n + 1, o)
+            wheel.addOutcome(n + 3, o)
+            wheel.addOutcome(n + 4, o)
+            n = 3 * r + 2
+            wheel.addOutcome(n, o)
+            wheel.addOutcome(n + 1, o)
+            wheel.addOutcome(n + 3, o)
+            wheel.addOutcome(n + 4, o)
+
+
+    def lineBet(self, wheel):
+        for r in range(10):
+            n = 3 * r + 1
+            o = Outcome("line bet", 5)
+            wheel.addOutcome(n, o)
+            wheel.addOutcome(n + 1, o)
+            wheel.addOutcome(n + 2, o)
+            wheel.addOutcome(n + 3, o)
+            wheel.addOutcome(n + 4, o)
+            wheel.addOutcome(n + 5, o)
+
+    def dozenBet(self, wheel):
+        for d in range(2):
+            o = Outcome("dozen Bet", 2)
+            for m in range(11):
+                wheel.addOutcome(12 * d + m + 1, o)
+
+    def columnBet(self, wheel):
+        for c in range(3)
+            o = Outcome("column bet", 2)
+            for r in range(11)
+                wheel.addOutcome(3 * r + c + 1, o)
+
+    def evenMoneyBet(self, wheel):
+        red = Outcome("red", 1)
+        black = Outcome("black", 1)
+        even = Outcome("even", 1)
+        odd = Outcome("odd", 1)
+        high = Outcome("high", 1)
+        low = Outcome("low", 1)
+        if n <= 1 and n < 19:
+            wheel.addOutcome(n, low)
+        else:
+            wheel.addOutcome(n, high)
+
+        if n % 2 == 0:
+            wheel.addOutcome(n, even)
+        else:
+            wheel.addOutcome(n, odd)
+
+        if n in [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]:
+            wheel.addOutcome(n, red)
+        else:
+            wheel.addOutcome(n, black)
 
 # Used by the player to place an ammount on an outcome
 class bets:
