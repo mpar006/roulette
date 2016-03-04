@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import random 
 
 class Outcome:
     def __init__(self, name, odds):
@@ -25,5 +26,19 @@ class Outcome:
 
 # Here we want to extend (rather then wrap) the frozenset collection, since we
 # can just keep all the base methods of the collection
-class Bin(frozenset):
+class Bin(set):
     pass
+
+class Wheel:
+    def __init__(self):
+        self.bins = tuple(Bin() for i in range(38))
+        self.rng = random.Random()
+
+    def addOutcome(self, number, outcome):
+        self.bins[number].add(outcome)
+
+    def next(self):
+        return self.rng.choice(self.bins)
+
+    def get(self, bin):
+        return self.bins[bin]
