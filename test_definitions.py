@@ -70,6 +70,8 @@ def test_ref(bin_fixture):
 def test_add(wheel_fixture):
    assert len(wheel_fixture.w.get(5)) == 3
 
+# next() in this case is deterministic, since we seeded the rng in the
+# fixture
 def test_next(wheel_fixture):
    assert len(wheel_fixture.w.next()) == 3
    assert len(wheel_fixture.w.next()) == 0
