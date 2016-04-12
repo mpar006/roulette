@@ -45,6 +45,15 @@ def wheel_fixture(request):
    w = Wheel_fixture()
    return w
 
+class Table_fixture:
+   def __init__(self):
+      self.t = Table(500, 10)
+
+@pytest.fixture()
+def table_fixture(request):
+   t = Table_fixture()
+   return t
+
 # Tests for outcome class
 def test_equal(outcome_fixture):
    assert outcome_fixture.o1 == outcome_fixture.o2
@@ -102,11 +111,50 @@ def test_looseAmount(outcome_fixture):
    b = Bet(20, outcome_fixture.o1)
    assert b.looseAmount() == 20
 
-def test_table(outcome_fixture):
-   t = Table()
+def test_placeBet(table_fixture, outcome_fixture):
+   t = table_fixture.t
    b = Bet(20, outcome_fixture.o1)
    t.placeBet(b)
    b = Bet(50, outcome_fixture.o3)
    t.placeBet(b)
 
-   print t
+   assert len(t.bets) == 2
+
+# Total should be less than 500 for valid bets
+def test_limit(table_fixture, outcome_fixture):
+   t = table_fixture.t
+   b = Bet(400, outcome_fixture.o1)
+   t.placeBet(b)
+   b = Bet(50, outcome_fixture.o3)
+   t.placeBet(b)
+
+   assert t.limitOk()
+
+def test_limit_fail(table_fixture, outcome_fixture):
+   t = table_fixture.t
+   b = Bet(400, outcome_fixture.o1)
+   t.placeBet(b)
+   b = Bet(150, outcome_fixture.o3)
+   t.placeBet(b)
+
+   assert t.limitOk() == False
+
+# All bets should be atleast 10 or greater
+def test_min(table_fixture, outcome_fixture):
+   t = table_fixture.t
+   b = Bet(400, outcome_fixture.o1)
+   t.placeBet(b)
+   b = Bet(150, outcome_fixture.o3)
+   t.placeBet(b)
+
+   assert t.minOk()
+
+def test_min_fail(table_fixture, outcome_fixture):
+   t = table_fixture.t
+   b = Bet(400, outcome_fixture.o1)
+   t.placeBet(b)
+   b = Bet(7, outcome_fixture.o3)
+   t.placeBet(b)
+
+   assert t.minOk() == False
+

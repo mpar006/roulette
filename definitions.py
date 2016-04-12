@@ -177,6 +177,9 @@ class Bet:
     def looseAmount(self):
         return self.amountBet
 
+    def amount(self):
+        return self.amountBet
+
     def __str__(self):
         return "{} on {}".format(self.amountBet, self.outcome)
 
@@ -185,25 +188,48 @@ class Bet:
 
 # A collection of bets placed on outcomes placed by player
 class Table:
-    def __init__(self):
+    def __init__(self, limit, minimum):
         self.bets = set()
+        self.limit = limit
+        self.minimum = minimum
 
     def placeBet(self, bet):
         self.bets.add(bet)
 
     def __str__(self):
-        ret = "Table("
+        ret = "Table(bets: "
         for b in self.bets:
             ret = ret + str(b) + ", "
-        ret = ret + ")"
+        ret += " limit: " + str(self.limit) + " min: " + str(self.minimum) + ")"
         return ret
 
     def __repr__(self):
         ret = "Table("
         for b in self.bets:
             ret = ret + str(b) + ", "
-        ret = ret + ")"
+        ret += " limit: " + str(self.limit) + " min: " + str(self.minimum) + ")"
         return ret
+
+    def isValid(self):
+        if not limitOk or not minOk:
+            raise InvalidBet
+        else:
+            return True
+
+    def limitOk(self):
+        s = 0
+        for b in self.bets:
+            s += b.amount()
+        return (s <= self.limit)
+
+    def minOk(self):
+        for b in self.bets:
+           if b.amount() < self.minimum:
+               return False
+        return True
+
+class InvalidBet(Exception):
+    pass
 
 # Employes a strategy to place an ammount of money on an outcome
 class Player:
